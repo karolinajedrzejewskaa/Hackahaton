@@ -103,12 +103,7 @@ if st.session_state.view == 'prediction':
                     (df['work_setting'] == st.session_state.work_setting) & 
                     (df['company_size'] == st.session_state.company_size) & 
                     (df['work_year'] == st.session_state.work_year)]
-    
-    if not filtered_data.empty:
-        st.write('Filtered Data:')
-        st.dataframe(filtered_data)
-    else:
-        st.write('No data available for the selected criteria.')
+
 
 # Dashboard Page
 if st.session_state.view == 'dashboard':
