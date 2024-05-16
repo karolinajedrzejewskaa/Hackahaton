@@ -10,7 +10,7 @@ from sklearn.metrics import mean_squared_error
 
 
 # Load data
-path = "/Users/lua/wild/Hackathon/tableau_numerique.csv"
+path = "https://raw.githubusercontent.com/LuaGeo/hackathon/main/tableau_numerique.csv"
 df = pd.read_csv(path, sep=',')
 
 # Define features and target

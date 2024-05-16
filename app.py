@@ -2,27 +2,31 @@ import streamlit as st
 import pandas as pd
 import pickle
 import numpy as np
-
 import plotly.express as px 
+import requests
+from io import BytesIO
 
 # File paths
-original_data_path = '/Users/lua/wild/Hackathon/jobs_in_data.csv'
-cleaned_data_path = '/Users/lua/wild/Hackathon/tableau_nettoye.csv'
-model_path = '/Users/lua/wild/Hackathon/model.pkl'
-encoders_path = '/Users/lua/wild/Hackathon/encoders.pkl'
+original_data_path = 'https://raw.githubusercontent.com/LuaGeo/hackathon/main/jobs_in_data.csv'
+cleaned_data_path = 'https://raw.githubusercontent.com/LuaGeo/hackathon/main/tableau_nettoye.csv'
+model_path = 'https://raw.githubusercontent.com/LuaGeo/hackathon/main/model.pkl'
+encoders_path = 'https://raw.githubusercontent.com/LuaGeo/hackathon/main/encoders.pkl'
 
 # Load data
 df = pd.read_csv(cleaned_data_path)
 original_df = pd.read_csv(original_data_path)
 
 
+# Function to load pickled files from GitHub
+def load_pickle(url):
+    response = requests.get(url)
+    return pickle.load(BytesIO(response.content))
+
 # Load your pre-trained model
-with open(model_path, 'rb') as file:
-    model = pickle.load(file)
+model = load_pickle(model_path)
 
 # Load your pre-trained encoders
-with open(encoders_path, 'rb') as file:
-    encoders = pickle.load(file)
+encoders = load_pickle(encoders_path)
 
 # Function to encode input data
 def encode_input_data(input_data, encoders):
