@@ -152,8 +152,11 @@ if st.session_state.view == 'dashboard':
         labels={'salary_in_usd': 'Average Salary in USD', 'job_category': 'Job Category', 'experience_level': 'Experience Level'},
         title='Average salary per job category and experience level',
         template='plotly_dark',
-        text='salary_in_usd'
+        #text='salary_in_usd'
+        text=avg_salary['salary_in_usd'] / 1000
     )
+    fig_avg_salary.update_yaxes(tickprefix='$', ticksuffix='K', tickformat=',.0f')
+    fig_avg_salary.update_traces(texttemplate='$%{text:.0f}K', textposition='inside')
     st.plotly_chart(fig_avg_salary, use_container_width=True)
 
     # Salary distribution per job category
