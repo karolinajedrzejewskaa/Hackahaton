@@ -4,6 +4,7 @@ import pickle
 import numpy as np
 import plotly.express as px 
 from plotly.subplots import make_subplots
+import plotly.graph_objects as go
 import requests
 from io import BytesIO
 
@@ -197,6 +198,48 @@ if st.session_state.view == 'home':
 if st.session_state.view == 'dashboard':
     st.title('Dashboard')
 
+    #----------------------------------------------------------------
+
+    # Calculate the number of unique job titles, unique job categories, and total salaries for 2023
+    unique_job_titles_count = original_df['job_title'].nunique()
+    unique_job_categories_count = original_df['job_category'].nunique()
+    total_salaries_2023 = original_df[original_df['work_year'] == 2023]['salary_in_usd'].sum()
+
+    # Create the indicators
+    fig1 = go.Figure(go.Indicator(
+        mode="number",
+        value=unique_job_titles_count,
+        title="Job Titles",
+        number={'font': {'color': 'lightblue'}}
+    ))
+
+    fig2 = go.Figure(go.Indicator(
+        mode="number",
+        value=unique_job_categories_count,
+        title="Job Categories",
+        number={'font': {'color': 'lightblue'}}
+    ))
+
+    fig3 = go.Figure(go.Indicator(
+        mode="number",
+        value=total_salaries_2023,
+        title="Total Salaries in 2023",
+        number={'prefix': "$", 'font': {'color': 'lightblue'}}
+    ))
+
+    fig1.update_layout(width=400, height=300)
+    fig2.update_layout(width=400, height=300)
+    fig3.update_layout(width=400, height=300)
+
+    # Display the indicators in a single row
+    col1, col2, col3 = st.columns(3)
+    col1.plotly_chart(fig1, use_container_width=True)
+    col2.plotly_chart(fig2, use_container_width=True)
+    col3.plotly_chart(fig3, use_container_width=True)
+    
+
+    #----------------------------------------------------------------
+
     # Number of job positions by year
     work_year_counts = original_df['work_year'].value_counts().sort_index()
     fig_year = px.line(
@@ -306,10 +349,13 @@ if st.session_state.view == 'dashboard':
     st.plotly_chart(fig_avg_salary_country, use_container_width=True)
 
     # Number of positions by top 10 Job titles
+    # & Number of job positions per country
     df_job_title_count = original_df['job_title'].value_counts().sort_values(ascending=False).reset_index()
     df_job_title_count.columns = ['job_title', 'count']
     top_10_job_titles_count = df_job_title_count.head(10)
-    fig_top_job_titles_count = px.bar(
+
+    # Create the first bar plot
+    bar_fig1 = px.bar(
         top_10_job_titles_count,
         x='count',
         y='job_title',
@@ -320,14 +366,21 @@ if st.session_state.view == 'dashboard':
         color='job_title',
         text='count'
     )
-    fig_top_job_titles_count.update_layout(showlegend=False)
-    st.plotly_chart(fig_top_job_titles_count, use_container_width=True)
+    bar_fig1.update_layout(
+        width=1200,
+        height=600,
+        xaxis_title='Number of Positions',
+        yaxis_title='Job Title',
+        showlegend=False
+    )
 
-    # Number of job positions per country
+    # Calculate the number of job positions per country
     country_counts = original_df['company_location'].value_counts().reset_index()
     country_counts.columns = ['company_location', 'count']
     filtered_country_counts = country_counts[country_counts['count'] >= 10]
-    fig_country_counts = px.bar(
+
+    # Create the second bar plot
+    bar_fig2 = px.bar(
         filtered_country_counts,
         x='company_location',
         y='count',
@@ -336,22 +389,42 @@ if st.session_state.view == 'dashboard':
         template='plotly_dark',
         text='count'
     )
-    st.plotly_chart(fig_country_counts, use_container_width=True)
+    bar_fig2.update_layout(
+        width=1000,
+        height=600
+    )
+
+    # Combine plots into subplots
+    fig = make_subplots(rows=1, cols=2, subplot_titles=("Number of positions by top 10 Job titles", "Number of job positions per country"))
+
+    for trace in bar_fig1['data']:
+        fig.add_trace(trace, row=1, col=1)
+
+    for trace in bar_fig2['data']:
+        fig.add_trace(trace, row=1, col=2)
+
+    fig.update_layout(
+        height=800,
+        width=1700,
+        template='plotly_dark',
+        showlegend=False
+    )
+
+    st.plotly_chart(fig, use_container_width=True)
 
 
 # Conclusion view
 if st.session_state.view == 'conclusion':
     st.title('Conclusions')
     conclusion_text = """
-    ## Hausse du nombre de métiers entre 2022 et 2023
-    
-    - Le jeu de données renseigne en majorité sur les métiers aux Etats-Unis
+    - Hausse du nombre de postes entre 2022 et 2023
+    - Le jeu de données renseigne en majorité sur les métiers aux États-Unis
     - Les autres régions du monde sont sous-représentées
     - Ecart aléatoire entre les salaires aux Etats-Unis pour le même métier et même niveau d'expérience
     - Catégorie Data Analysis dans le top 5 des budgets salaires alloués
     - L'écart reflète-t-il la disparité des salaires aux Etats-Unis ou est expliqué par l'insuffisance de données?
     
-    ### Limites de l'analyse:
+    ### Barrières de l'analyse:
     - Prédiction de salaire possible uniquement pour les métiers aux Etats-Unis
     - Données insuffisantes pour avoir un score du modèle satisfaisant
     
