@@ -3,6 +3,7 @@ import pandas as pd
 import pickle
 import numpy as np
 import plotly.express as px 
+from plotly.subplots import make_subplots
 import requests
 from io import BytesIO
 
@@ -170,6 +171,23 @@ if st.session_state.view == 'prediction':
 
 # Home view
 if st.session_state.view == 'home':
+    st.markdown(
+    """
+    <div style="display: flex; justify-content: center; ">
+        <img style= "width: 200px;" src="https://raw.githubusercontent.com/LuaGeo/hackathon/main/logo_with_transparent_background%20(1).png" alt="logo">
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+    st.markdown(
+    """
+    <div style="display: flex; justify-content: center; margin-bottom: 30px">
+        <h1 style="color: #1AE3FC">DATA CAREER CONSULTING</h1>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
     st.write("❝ Data Career Consulting is a platform providing insights into data job salaries. \
             With our interactive dashboard, clients can explore salary data by country, \
             job title, and experience level, empowering them to make informed career decisions. ❞")
@@ -212,26 +230,34 @@ if st.session_state.view == 'dashboard':
     fig_top_salaries.update_traces(texttemplate='$%{text:.0f}K', textposition='inside')
     st.plotly_chart(fig_top_salaries, use_container_width=True)
 
-    # Average salary per job category and experience level
-    avg_salary = original_df.groupby(['job_category', 'experience_level'])['salary_in_usd'].mean().sort_values(ascending=False).round(2).reset_index()
-    fig_avg_salary = px.bar(
+    # Average salary per job category and experience level 
+    # & Salary distribution per job category
+
+    avg_salary = original_df.groupby(['job_category', 'experience_level'])['salary_in_usd'].mean().sort_values(ascending=False).round().reset_index()
+
+    # Create bar plot
+    bar_fig = px.bar(
         avg_salary,
         x='job_category',
         y='salary_in_usd',
         color='experience_level',
         barmode='group',
         labels={'salary_in_usd': 'Average Salary in USD', 'job_category': 'Job Category', 'experience_level': 'Experience Level'},
-        title='Average salary per job category and experience level',
+        title='Average Salary per Job Category and Experience Level',
         template='plotly_dark',
-        #text='salary_in_usd'
         text=avg_salary['salary_in_usd'] / 1000
     )
-    fig_avg_salary.update_yaxes(tickprefix='$', ticksuffix='K', tickformat=',.0f')
-    fig_avg_salary.update_traces(texttemplate='$%{text:.0f}K', textposition='inside')
-    st.plotly_chart(fig_avg_salary, use_container_width=True)
+    bar_fig.update_layout(
+        width=1200,
+        height=800,
+        yaxis_title='Average Salary in USD',
+        xaxis_title='Job Category'
+    )
+    bar_fig.update_yaxes(tickprefix='$', ticksuffix='K', tickformat=',.0f')
+    bar_fig.update_traces(texttemplate='$%{text:.0f}K', textposition='inside')
 
-    # Salary distribution per job category
-    fig_job_category_salary = px.box(
+    # Create box plot
+    box_fig = px.box(
         original_df,
         x='job_category',
         y='salary_in_usd',
@@ -239,7 +265,29 @@ if st.session_state.view == 'dashboard':
         title='Salary distribution per job category',
         template='plotly_dark'
     )
-    st.plotly_chart(fig_job_category_salary, use_container_width=True)
+    box_fig.update_layout(
+        width=1000, 
+        height=600 
+    )
+
+    # Combine plots into subplots
+    fig = make_subplots(rows=1, cols=2, subplot_titles=("Average Salary per Job Category and Experience Level", "Salary distribution per job category"))
+
+    for trace in bar_fig['data']:
+        fig.add_trace(trace, row=1, col=1)
+
+    for trace in box_fig['data']:
+        fig.add_trace(trace, row=1, col=2)
+
+    fig.update_layout(
+        height=800,
+        width=1700,
+        template='plotly_dark',
+        showlegend=False
+    )
+
+    # Display the figure in Streamlit
+    st.plotly_chart(fig, use_container_width=True)
 
     # Average Salary in Data per country
     avg_salary_per_country = original_df.groupby('company_location')['salary_in_usd'].mean().reset_index().round(2)
