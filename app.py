@@ -14,6 +14,8 @@ original_data_path = 'https://raw.githubusercontent.com/LuaGeo/hackathon/main/jo
 cleaned_data_path = 'https://raw.githubusercontent.com/LuaGeo/hackathon/main/tableau_nettoye.csv'
 model_path = 'https://raw.githubusercontent.com/LuaGeo/hackathon/main/model.pkl'
 encoders_path = 'https://raw.githubusercontent.com/LuaGeo/hackathon/main/encoders.pkl'
+css_path = 'https://raw.githubusercontent.com/LuaGeo/hackathon/main/styles.css'
+
 
 # Load data
 df = pd.read_csv(cleaned_data_path)
@@ -45,12 +47,17 @@ def encode_input_data(input_data, encoders):
 if 'view' not in st.session_state:
     st.session_state.view = 'home'
 
-# Load CSS content from styles.css file
-with open("https://raw.githubusercontent.com/LuaGeo/hackathon/main/styles.css") as file:
-    css = file.read()
+# Load CSS content from GitHub
+def load_css(path):
+    response = requests.get(path)
+    return response.text
 
-# Display CSS content
+# Apply CSS
+css = load_css(css_path)
 st.markdown(f'<style>{css}</style>', unsafe_allow_html=True)
+
+
+
 
 # Navigation buttons in the sidebar
 if st.sidebar.button('Home'):
