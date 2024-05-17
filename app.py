@@ -142,7 +142,7 @@ if st.session_state.view == 'dashboard':
     st.plotly_chart(fig_top_salaries, use_container_width=True)
 
     # Average salary per job category and experience level
-    avg_salary = original_df.groupby(['job_category', 'experience_level'])['salary_in_usd'].mean().sort_values(ascending=True).round(2).reset_index()
+    avg_salary = original_df.groupby(['job_category', 'experience_level'])['salary_in_usd'].mean().sort_values(ascending=False).round(2).reset_index()
     fig_avg_salary = px.bar(
         avg_salary,
         x='job_category',
