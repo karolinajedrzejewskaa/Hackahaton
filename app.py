@@ -121,6 +121,7 @@ if st.session_state.view == 'dashboard':
     )
     fig_year.update_traces(line=dict(color='#c63256'))
     fig_year.update_layout(template='plotly_dark')
+    fig_year.update_xaxes(tickvals=[2020, 2021, 2022, 2023])
     st.plotly_chart(fig_year, use_container_width=True)
 
     # Total salaries by top 10 job titles
