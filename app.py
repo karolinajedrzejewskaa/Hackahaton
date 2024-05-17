@@ -46,7 +46,7 @@ if 'view' not in st.session_state:
     st.session_state.view = 'home'
 
 # Load CSS content from styles.css file
-with open("/Users/lua/wild/Hackathon/styles.css", "r") as file:
+with open("https://raw.githubusercontent.com/LuaGeo/hackathon/main/styles.css") as file:
     css = file.read()
 
 # Display CSS content
