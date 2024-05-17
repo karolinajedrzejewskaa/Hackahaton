@@ -6,6 +6,9 @@ import plotly.express as px
 import requests
 from io import BytesIO
 
+# Set the page configuration
+st.set_page_config(page_title="Dashboard and Prediction App", layout="wide")
+
 # File paths
 original_data_path = 'https://raw.githubusercontent.com/LuaGeo/hackathon/main/jobs_in_data.csv'
 cleaned_data_path = 'https://raw.githubusercontent.com/LuaGeo/hackathon/main/tableau_nettoye.csv'
@@ -70,6 +73,7 @@ with st.sidebar.expander('Prediction App'):
             st.session_state.work_year = work_year
 
 # Prediction view
+
 if st.session_state.view == 'prediction':
     st.title('Salary Prediction App')
     st.write('## Prediction Results')
