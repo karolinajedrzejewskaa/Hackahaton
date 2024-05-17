@@ -181,9 +181,10 @@ if st.session_state.view == 'dashboard':
         labels={'salary_in_usd': 'Average Salary in USD', 'company_location': 'Country'},
         title='Average Salary in Data per country',
         template='plotly_dark',
-        text='salary_in_usd'
+        text=avg_salary_per_country['salary_in_usd'] / 1000
     )
     fig_avg_salary_country.update_layout(xaxis_tickangle=-45)
+    fig_avg_salary_country.update_traces(texttemplate='$%{text:.0f}K', textposition='inside')
     st.plotly_chart(fig_avg_salary_country, use_container_width=True)
 
     # Number of positions by top 10 Job titles
