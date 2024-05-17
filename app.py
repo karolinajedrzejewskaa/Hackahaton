@@ -11,6 +11,8 @@ from io import BytesIO
 # Set the page configuration
 st.set_page_config(page_title="Dashboard and Prediction App", layout="wide")
 
+
+
 # File paths
 original_data_path = 'https://raw.githubusercontent.com/LuaGeo/hackathon/main/jobs_in_data.csv'
 cleaned_data_path = 'https://raw.githubusercontent.com/LuaGeo/hackathon/main/tableau_nettoye.csv'
@@ -59,19 +61,19 @@ css = load_css(css_path)
 st.markdown(f'<style>{css}</style>', unsafe_allow_html=True)
 
 
-
-
 # Navigation buttons in the sidebar
-if st.sidebar.button('Home'):
+
+
+if st.sidebar.button('🛖  Home'):
     st.session_state.view = 'home'
 
-if st.sidebar.button('Dashboard'):
+if st.sidebar.button('📊  Dashboard'):
     st.session_state.view = 'dashboard'
 
-if st.sidebar.button('Conclusion'):
+if st.sidebar.button('📝  Conclusion'):
     st.session_state.view = 'conclusion'
 
-if st.sidebar.button('Contact'):
+if st.sidebar.button('💌  Contact'):
     st.session_state.view = 'contact'
 
 
