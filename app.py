@@ -43,13 +43,28 @@ def encode_input_data(input_data, encoders):
 
 # Initialize session state
 if 'view' not in st.session_state:
+    st.session_state.view = 'home'
+
+# Load CSS content from styles.css file
+with open("/Users/lua/wild/Hackathon/styles.css", "r") as file:
+    css = file.read()
+
+# Display CSS content
+st.markdown(f'<style>{css}</style>', unsafe_allow_html=True)
+
+# Navigation buttons in the sidebar
+if st.sidebar.button('Home'):
+    st.session_state.view = 'home'
+
+if st.sidebar.button('Dashboard'):
     st.session_state.view = 'dashboard'
 
-# Sidebar Navigation
-with st.sidebar:
-    st.header('Menu')
-    if st.button('Dashboard'):
-        st.session_state.view = 'dashboard'
+if st.sidebar.button('Conclusion'):
+    st.session_state.view = 'conclusion'
+
+if st.sidebar.button('Contact'):
+    st.session_state.view = 'contact'
+
 
 job_titles = df['job_title'].unique()
 
@@ -60,7 +75,7 @@ with st.sidebar.expander('Prediction App'):
         experience_level = st.selectbox('Experience level', ['Entry-level', 'Mid-level', 'Senior', 'Executive'])
         work_setting = st.selectbox('Work setting', ['Remote', 'Hybrid', 'In-person'])
         company_size = st.selectbox('Company size', ['L', 'M', 'S'])
-        work_year = st.selectbox('Year', [2023, 2022, 2021, 2020])
+        work_year = st.selectbox('Year', [2023, 2022])
         
         submit_button = st.form_submit_button(label='Submit')
 
@@ -75,14 +90,50 @@ with st.sidebar.expander('Prediction App'):
 # Prediction view
 
 if st.session_state.view == 'prediction':
-    st.title('Salary Prediction App')
-    st.write('## Prediction Results')
-    st.write('You selected:')
-    st.write(f'Job Title: {st.session_state.job_title}')
-    st.write(f'Experience level: {st.session_state.experience_level}')
-    st.write(f'Work setting: {st.session_state.work_setting}')
-    st.write(f'Company size: {st.session_state.company_size}')
-    st.write(f'Year: {st.session_state.work_year}')
+    st.markdown("""
+    <style>
+    .prediction-container {
+        background-color: #f8f9fa;
+        height: 1px;
+        border-radius: 10px;
+        box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    .prediction-title {
+        font-size: 36px;
+        font-weight: bold;
+        color: #343a40;
+        
+    }
+    .prediction-subtitle {
+        font-size: 24px;
+        font-weight: bold;
+        color: #495057;
+        
+    }
+    .prediction-details {
+        font-size: 18px;
+        color: #6c757d;
+        
+    }
+    .predicted-salary {
+        font-size: 28px;
+        font-weight: bold;
+        color: #28a745;
+        margin-top: 20px;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
+    st.markdown('<div class="prediction-container">', unsafe_allow_html=True)
+    st.markdown('<div class="prediction-title">Salary Prediction App</div>', unsafe_allow_html=True)
+    st.markdown('<div class="prediction-subtitle">Prediction Results</div>', unsafe_allow_html=True)
+    st.markdown('<div class="prediction-details">You selected:</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="prediction-details"><strong>Job Title:</strong> {st.session_state.job_title}</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="prediction-details"><strong>Experience level:</strong> {st.session_state.experience_level}</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="prediction-details"><strong>Work setting:</strong> {st.session_state.work_setting}</div>', unsafe_allow_html=True)
+
+    st.markdown(f'<div class="prediction-details"><strong>Company size:</strong> {st.session_state.company_size}</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="prediction-details"><strong>Year:</strong> {st.session_state.work_year}</div>', unsafe_allow_html=True)
 
     # Prepare the input data for the model
     input_data = pd.DataFrame({
@@ -99,7 +150,9 @@ if st.session_state.view == 'prediction':
     # Make the prediction
     prediction = model.predict(input_data_encoded)
     predicted_salary = np.expm1(prediction[0])  # Assuming the target variable was log-transformed
-    st.write(f'## Predicted Salary: ${predicted_salary:,.2f}')
+    st.markdown(f'<div class="predicted-salary">Predicted Salary: ${predicted_salary:,.2f}</div>', unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True)
+    st.markdown('<div class="prediction-container">', unsafe_allow_html=True)
     
     # Filter data based on user input
     filtered_data = df[(df['job_title'] == st.session_state.job_title) & 
@@ -107,6 +160,12 @@ if st.session_state.view == 'prediction':
                     (df['work_setting'] == st.session_state.work_setting) & 
                     (df['company_size'] == st.session_state.company_size) & 
                     (df['work_year'] == st.session_state.work_year)]
+
+# Home view
+if st.session_state.view == 'home':
+    st.write("❝ Data Career Consulting is a platform providing insights into data job salaries. \
+            With our interactive dashboard, clients can explore salary data by country, \
+            job title, and experience level, empowering them to make informed career decisions. ❞")
 
 
 # Dashboard Page
@@ -223,3 +282,14 @@ if st.session_state.view == 'dashboard':
         text='count'
     )
     st.plotly_chart(fig_country_counts, use_container_width=True)
+
+
+# Conclusion view
+if st.session_state.view == 'conclusion':
+    st.write('## Our Project')
+    st.write('This is our awesome project! 🚀')
+    
+# Contact view
+if st.session_state.view == 'contact':
+    st.write('## Contact Us')
+    st.write('Please contact Karolina, Lala, Luana, and Patrick for any questions or feedback. 📧')
