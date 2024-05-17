@@ -293,8 +293,27 @@ if st.session_state.view == 'dashboard':
 
 # Conclusion view
 if st.session_state.view == 'conclusion':
-    st.write('## Our Project')
-    st.write('This is our awesome project! 🚀')
+    st.title('Conclusions')
+    conclusion_text = """
+    ## Hausse du nombre de métiers entre 2022 et 2023
+    
+    - Le jeu de données renseigne en majorité sur les métiers aux Etats-Unis
+    - Les autres régions du monde sont sous-représentées
+    - Ecart aléatoire entre les salaires aux Etats-Unis pour le même métier et même niveau d'expérience
+    - Catégorie Data Analysis dans le top 5 des budgets salaires alloués
+    - L'écart reflète-t-il la disparité des salaires aux Etats-Unis ou est expliqué par l'insuffisance de données?
+    
+    ### Limites de l'analyse:
+    - Prédiction de salaire possible uniquement pour les métiers aux Etats-Unis
+    - Données insuffisantes pour avoir un score du modèle satisfaisant
+    
+    ### Informations utiles pour améliorer le score:
+    - Localisation des entreprises : Etat, ville
+    - Secteur d'activité de l'entreprise: tech, industries, ...
+    - Niveau d'expérience
+    """
+
+    st.markdown(conclusion_text)
     
 # Contact view
 if st.session_state.view == 'contact':
