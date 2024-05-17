@@ -135,10 +135,11 @@ if st.session_state.view == 'dashboard':
         labels={'salary_in_usd': 'Salary in USD', 'job_title': 'Job Title'},
         title='Total of salaries by top 10 job titles',
         template='plotly_dark',
-        text='salary_in_usd',
+        text = top_10_job_titles['salary_in_usd'] / 1000,
         color='job_title'
     )
     fig_top_salaries.update_layout(showlegend=False)
+    fig_top_salaries.update_traces(texttemplate='$%{text:.0f}K', textposition='inside')
     st.plotly_chart(fig_top_salaries, use_container_width=True)
 
     # Average salary per job category and experience level
