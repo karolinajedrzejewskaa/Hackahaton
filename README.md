@@ -31,5 +31,5 @@ The data used for this project: [Jobs in Data](https://www.kaggle.com/datasets/h
 ## Technologies
 
 * **Languages**: Python
-* **Python libraries**: NumPy, Pandas, Matplotlib, Seaborn, Plotly, scitkit-learn, Streamlit.
+* **Python libraries**: NumPy, Pandas, Matplotlib, Seaborn, Plotly, scitkit-learn, Streamlit
 * **Tools**: VS Code, Streamlit, Github, Discord
