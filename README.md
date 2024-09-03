@@ -9,7 +9,7 @@
 - [Technologies](#technologies)
 
 ## Description
-This GitHub repository contains a group project completed during a 2-day hackathon as part of our Data Analysis course at World Code School. The project was developed by Luana, Patrick, Lala, and me, focusing on creating a Streamlit application that predicts salaries for data careers in the US based on career criteria, using the XGBoost machine learning model. The project involved data cleaning, preparation, and analysis.
+This GitHub repository contains a group project completed during a 2-day hackathon as part of our Data Analysis course at Wild Code School. The project was developed by Luana, Patrick, Lala, and me, focusing on creating a Streamlit application that predicts salaries for data careers in the US based on career criteria, using the XGBoost machine learning model. The project involved data cleaning, preparation, and analysis.
 
 
 ## Project Stages
